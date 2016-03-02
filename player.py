@@ -1,4 +1,4 @@
-import pygame
+import pygame, constants
 
 class Player(pygame.sprite.Sprite):
     # constrctor class that takes x, y coordinates as parameters
@@ -36,7 +36,7 @@ class Player(pygame.sprite.Sprite):
         if self.checkGround():
             self.ay = -0.25
             self.dy = -velocity
-            self.rect.y -= 2
+            self.rect.y -= 4
         
 
     def stop(self):
@@ -48,7 +48,7 @@ class Player(pygame.sprite.Sprite):
         # sum of top-left y-coord and sprite height equals bottom-left y-coord
         # if that y-coord is 1 pixel or less from bottom edge of the screen,
         # then the sprite is on the ground
-        if self.rect.y + self.height >= 179:
+        if self.rect.y + self.height >= constants.SCR_HEIGHT - 2:
             onGround = True
         return onGround
             
@@ -61,7 +61,7 @@ class Player(pygame.sprite.Sprite):
         if self.checkGround():
             self.ay = 0
             self.dy = 0
-            self.rect.y = 180 - self.height
+            self.rect.y = constants.SCR_HEIGHT - self.height
         # move in y direction
         self.rect.y += self.dy
         self.dy -= self.ay
