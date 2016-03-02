@@ -15,11 +15,11 @@ def keyDown(event, player):
     # if key is pressed, do something
     if event.type == pygame.KEYDOWN:
         if event.key == pygame.K_LEFT:
-            player.moveX(4, "left")
+            player.moveLeft()
         if event.key == pygame.K_RIGHT:
-            player.moveX(4, "right")
+            player.moveRight()
         if event.key == pygame.K_UP:
-            player.moveY(7)
+            player.jump()
 
 def keyUp(event, player):
     # if key is released, stop doing something    
@@ -36,15 +36,24 @@ def main():
 
     player_sprites = pygame.sprite.RenderPlain()
     platform_sprites = pygame.sprite.RenderPlain()
+    active_sprites = pygame.sprite.RenderPlain()
     # create sprite and add it sprite group
     face = player.Player(50, 0)
     player_sprites.add(face)
+    active_sprites.add(face)
     
-    
-    for i in range(0,5):
-        platpos = 0 + (i  * 32)
-        platform = plat.Platform(300 + platpos, 500)
+    # generate platforms
+    for i in range(0,4):
+        platpos = 0 + (i  * 24)
+        platform = plat.Platform(0, constants.SCR_HEIGHT - platpos)
         platform_sprites.add(platform)
+
+    for i in range(0, 3):
+        platpos = 0 + (i  * 32)
+        platform = plat.Platform(100 + platpos, constants.SCR_HEIGHT - 72)
+        platform_sprites.add(platform)
+
+    face.walls = platform_sprites # give player class wall list for collision
     
     # define variable for tick speed
     clock = pygame.time.Clock()
@@ -53,9 +62,7 @@ def main():
 
     # main loop
     while running:
-        # tick clock to keep constant framerate
-        clock.tick(30)
-        # event handling, gets all events from the event queue
+        
         for event in pygame.event.get():
             keyDown(event, face)
             keyUp(event, face)
@@ -63,13 +70,18 @@ def main():
             if event.type == pygame.QUIT:
                 # change the value to False, exiting the main loop
                 running = False
+                
+        active_sprites.update() # run update method of sprites in group
+
+        #Draw Everything
         screen.fill((255, 255, 255)) # create blank screen for every frame
-        player_sprites.update() # run update method of sprites in group
         platform_sprites.draw(screen)
-        player_sprites.draw(screen) # draw updated sprites
+        active_sprites.draw(screen) # draw updated sprites
 
         pygame.display.flip() # update the screen
-        
+
+        # tick clock to keep constant framerate
+        clock.tick(60)
     pygame.quit()
 
 # run the main function only if this module is executed as the main script

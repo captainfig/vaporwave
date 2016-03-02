@@ -11,60 +11,88 @@ class Player(pygame.sprite.Sprite):
         # set position
         self.rect.x = x
         self.rect.y = y
-        self.x = x
-        self.y = y
         # set width and height
         self.width = self.rect.width
         self.height = self.rect.height
         # set velocity and acceleration
         self.dx = 0
         self.dy = 0
-        self.ax = 0.25
-        self.ay = -0.25
+        self.ay = constants.GRAV
+        # set variable to retrieve platforms from main
+        self.walls = None
+        
         
 
-    def moveX(self, velocity, direction):
-        # if moving left, move in negative direction
-        if direction == "left":
-            self.dx = -velocity
-        # if moving right, move in positive direction
-        elif direction == "right":
-            self.dx = velocity
+    def moveLeft(self):
+        # Move in negative x direction
+        self.dx = -constants.X_VEL
 
-    def moveY(self, velocity):
-        # if sprite is on the ground, jump
-        if self.checkGround():
-            self.ay = -0.25
-            self.dy = -velocity
+    def moveRight(self):
+        # Move in positive x direction
+        self.dx = constants.X_VEL
+
+    def jump(self):
+        # Move down 2 pixels and check for collision, then move back up 2 pixels
+        self.rect.y += 2
+        block_hit_list = pygame.sprite.spritecollide(self, self.walls, False)
+        self.rect.y -=2
+        # jump if sprite is on the ground, or collided with a platform
+        if self.checkGround() or len(block_hit_list)>0:
+            self.dy = -constants.Y_VEL
             self.rect.y -= 4
         
-
     def stop(self):
         # set x velocity to zero to stop movement
         self.dx = 0
 
     def checkGround(self):
         onGround = False
-        # sum of top-left y-coord and sprite height equals bottom-left y-coord
-        # if that y-coord is 1 pixel or less from bottom edge of the screen,
+        # if bottom of rectangle is greater than or equal to the screen height,
         # then the sprite is on the ground
-        if self.rect.y + self.height >= constants.SCR_HEIGHT - 2:
+        if self.rect.bottom >= constants.SCR_HEIGHT:
             onGround = True
         return onGround
-            
+
+    def addGrav(self):
+        # If platform moves, this ensures player moves with it
+        if self.dy == 0:
+            self.dy = 1
+        else:
+            self.dy -= constants.GRAV
+
+        if self.checkGround():
+            # If on the ground, negate gravity
+            self.dy = 0
+            self.rect.y = constants.SCR_HEIGHT - self.height
 
     def update(self):
+        # Account for gravity
+        self.addGrav()
+        
         # move in x direction
         self.rect.x += self.dx
 
-        # remove affect of gravity if player is on the ground
-        if self.checkGround():
-            self.ay = 0
-            self.dy = 0
-            self.rect.y = constants.SCR_HEIGHT - self.height
+        # check if x movement resulted in collision
+        block_hit_list = pygame.sprite.spritecollide(self, self.walls, False)
+        for block in block_hit_list:
+            if self.dx > 0:
+                self.rect.right = block.rect.left
+            if self.dx < 0:
+                self.rect.left = block.rect.right        
+
         # move in y direction
         self.rect.y += self.dy
-        self.dy -= self.ay
+
+        # check if y movement resulted in collision
+        block_hit_list = pygame.sprite.spritecollide(self, self.walls, False)
+        for block in block_hit_list:
+            if self.dy > 0:
+                self.rect.bottom = block.rect.top
+            if self.dy < 0:
+                self.rect.top = block.rect.bottom
+            self.dy=0
+            
+        
 
             
         
