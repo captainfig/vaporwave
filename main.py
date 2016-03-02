@@ -20,7 +20,7 @@ def main():
     player_sprites = pygame.sprite.RenderPlain((face))
     
 
-    pygame.display.flip()
+    
     
     # define variable for tick speed
     clock = pygame.time.Clock()
@@ -56,8 +56,8 @@ def main():
         screen.fill((255, 255, 255)) # create blank screen for every frame
         player_sprites.update() # run update method of sprites in group
         player_sprites.draw(screen) # draw updated sprites
-        
-        pygame.display.update() # update the screen
+
+        pygame.display.flip() # update the screen
 
 # run the main function only if this module is executed as the main script
 if __name__=="__main__":
