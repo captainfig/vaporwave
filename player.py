@@ -78,7 +78,13 @@ class Player(pygame.sprite.Sprite):
             if self.dx > 0:
                 self.rect.right = block.rect.left
             if self.dx < 0:
-                self.rect.left = block.rect.right        
+                self.rect.left = block.rect.right
+
+        # check if x movement goes off screen
+        if self.rect.right >= constants.SCR_WIDTH:
+            self.rect.right = constants.SCR_WIDTH
+        elif self.rect.x <= 0:
+            self.rect.x = 0
 
         # move in y direction
         self.rect.y += self.dy
