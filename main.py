@@ -91,6 +91,8 @@ def main():
 
 
     face.walls = platform_sprites # give player class wall list for collision
+
+    #soviet = pygame.image.load("soviet.jpg")
     
     # define variable for tick speed
     clock = pygame.time.Clock()
@@ -112,6 +114,7 @@ def main():
 
         #Draw Everything
         screen.fill((255, 255, 255)) # create blank screen for every frame
+        #screen.blit(soviet, (0,0))
         platform_sprites.draw(screen)
         active_sprites.draw(screen) # draw updated sprites
 
