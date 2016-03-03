@@ -82,6 +82,13 @@ def main():
         platpos = 0 + (i  * 32)
         platform = plat.Platform(100 + platpos, constants.SCR_HEIGHT - 72)
         platform_sprites.add(platform)
+        platform = plat.Platform(300 + platpos, constants.SCR_HEIGHT - 100)
+        platform_sprites.add(platform)
+        platform = plat.Platform(400 + platpos, constants.SCR_HEIGHT - 180)
+        platform_sprites.add(platform)
+        platform = plat.Platform(300 - platpos, constants.SCR_HEIGHT - 260)
+        platform_sprites.add(platform)
+
 
     face.walls = platform_sprites # give player class wall list for collision
     
