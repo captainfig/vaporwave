@@ -45,7 +45,9 @@ def keyDown(event, player):
     if event.type == pygame.KEYDOWN:
         if event.key == pygame.K_a:
             player.moveLeft()
+            player.image = pygame.image.load("goodcopflip.png")
         if event.key == pygame.K_d:
+            player.image = pygame.image.load("goodcop.png")
             player.moveRight()
         if event.key == pygame.K_SPACE:
             player.jump()

@@ -6,7 +6,7 @@ class Player(pygame.sprite.Sprite):
         # call parent constructor
         pygame.sprite.Sprite.__init__(self)
         # set sprite image and rectangle
-        self.image = pygame.image.load("player.png")
+        self.image = pygame.image.load("goodcop.png")
         self.rect = self.image.get_rect()
         # set position
         self.rect.x = x
