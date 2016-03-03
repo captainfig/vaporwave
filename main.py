@@ -1,9 +1,38 @@
 # import pygame module
 import pygame, time, constants, player, plat
 
+pygame.init()
+screen = pygame.display.set_mode((constants.SCR_WIDTH,constants.SCR_HEIGHT))
+
+class Menu():
+    def __init__(self):
+        self.clock = pygame.time.Clock()
+        self.font = pygame.font.SysFont('courier', 32)
+        self.color = (0, 0, 0)
+        self.titleScreen = pygame.image.load("titlescreen.png")
+        self.directions = self.font.render("Press Any Key", 1, self.color)
+        self.running = True
+
+    def run(self):
+        running = True
+        createGame(screen)
+        
+        while self.running:
+            screen.blit(self.titleScreen, (0, 0))
+            screen.blit(self.directions, (190, 335))
+            
+            pygame.display.update()
+
+            self.clock.tick(60)
+            
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    self.running = False
+                elif event.type == pygame.KEYUP:
+                    main()
+            
+
 def createGame(display):
-     # initialize pygame module
-    pygame.init()
     # load and set logo
     logo = pygame.image.load("logo32x32.png")
     pygame.display.set_icon(logo)
@@ -14,24 +43,23 @@ def createGame(display):
 def keyDown(event, player):
     # if key is pressed, do something
     if event.type == pygame.KEYDOWN:
-        if event.key == pygame.K_LEFT:
+        if event.key == pygame.K_a:
             player.moveLeft()
-        if event.key == pygame.K_RIGHT:
+        if event.key == pygame.K_d:
             player.moveRight()
-        if event.key == pygame.K_UP:
+        if event.key == pygame.K_SPACE:
             player.jump()
 
 def keyUp(event, player):
     # if key is released, stop doing something    
     if event.type == pygame.KEYUP:
-        if event.key == pygame.K_LEFT:
+        if event.key == pygame.K_a:
             player.stop()
-        if event.key == pygame.K_RIGHT:
+        if event.key == pygame.K_d:
             player.stop()
 
 # define main function
 def main():
-    screen = pygame.display.set_mode((constants.SCR_WIDTH,constants.SCR_HEIGHT))
     createGame(screen)
 
     player_sprites = pygame.sprite.RenderPlain()
@@ -66,10 +94,10 @@ def main():
         for event in pygame.event.get():
             keyDown(event, face)
             keyUp(event, face)
-            # beark loop if game is quit
+            # break loop if game is quit
             if event.type == pygame.QUIT:
-                # change the value to False, exiting the main loop
                 running = False
+                
                 
         active_sprites.update() # run update method of sprites in group
 
@@ -82,9 +110,12 @@ def main():
 
         # tick clock to keep constant framerate
         clock.tick(60)
+    menu.running = False
     pygame.quit()
 
 # run the main function only if this module is executed as the main script
 if __name__=="__main__":
     # call the main function
-    main()
+    menu = Menu()
+    menu.run()
+    pygame.quit()
